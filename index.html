@@ -113,8 +113,6 @@
     .aparecer { opacity: 1; transform: none; transition: none; }
   }
 
-  /* Reproductor de YouTube oculto (no se usa display:none para que el navegador lo deje sonar) */
-  #yt { position: fixed; width: 1px; height: 1px; left: 0; bottom: 0; opacity: 0; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -193,17 +191,13 @@
   <div class="borde-rayado"></div>
 </main>
 
-<div id="yt"></div>
-
 <script>
   /* ===================== CONFIGURACIÓN ===================== */
   const CONFIG = {
     // Fecha y hora del cumple (hora de Argentina, -03:00)
     fecha: "2026-10-25T16:30:00-03:00",
-    // Video de YouTube de "Night Changes" (One Direction)
-    youtubeId: "syFZfO_wfMQ",
-    // Si querés usar un mp3 propio en vez de YouTube, subilo como audio/night-changes.mp3
-    audioLocal: "audio/night-changes.mp3",
+    // Canción (Night Changes - One Direction)
+    cancion: "audio/night-changes.mp3",
     // Velocidad del scroll automático (píxeles por segundo)
     velocidadScroll: 65
   };
@@ -335,33 +329,9 @@
   const tTotal = document.getElementById("t-total");
   const fmt = s => isFinite(s) ? `${Math.floor(s / 60)}:${pad(Math.floor(s % 60))}` : "0:00";
 
-  let ytPlayer = null, ytListo = false, usarAudioLocal = false, sonando = false, repetir = false;
-  const audio = new Audio();
-  audio.preload = "none";
-
-  // Si existe un mp3 propio en el repo, se usa ese en lugar de YouTube
-  fetch(CONFIG.audioLocal, { method: "HEAD" }).then(r => {
-    if (r.ok) { usarAudioLocal = true; audio.src = CONFIG.audioLocal; audio.preload = "auto"; }
-  }).catch(() => {});
-
-  window.onYouTubeIframeAPIReady = () => {
-    ytPlayer = new YT.Player("yt", {
-      videoId: CONFIG.youtubeId,
-      playerVars: { playsinline: 1, controls: 0, disablekb: 1, rel: 0 },
-      events: {
-        onReady: () => { ytListo = true; tTotal.textContent = fmt(ytPlayer.getDuration()); },
-        onStateChange: e => {
-          if (e.data === YT.PlayerState.PLAYING) marcarSonando(true);
-          if (e.data === YT.PlayerState.ENDED) {
-            if (repetir) { ytPlayer.seekTo(0, true); ytPlayer.playVideo(); } else marcarSonando(false);
-          }
-        }
-      }
-    });
-  };
-  const tag = document.createElement("script");
-  tag.src = "https://www.youtube.com/iframe_api";
-  document.head.appendChild(tag);
+  let sonando = false;
+  const audio = new Audio(CONFIG.cancion);
+  audio.preload = "metadata";
 
   function marcarSonando(si) {
     sonando = si;
@@ -371,53 +341,39 @@
     si ? iniciarScroll() : detenerScroll();
   }
 
-  btn.addEventListener("click", () => {
-    if (usarAudioLocal) {
-      if (audio.paused) { audio.play(); marcarSonando(true); } else { audio.pause(); marcarSonando(false); }
-      return;
-    }
-    if (!ytListo) return;
-    if (sonando) { ytPlayer.pauseVideo(); marcarSonando(false); }
-    else { ytPlayer.unMute(); ytPlayer.setVolume(100); ytPlayer.playVideo(); marcarSonando(true); }
-  });
-  audio.addEventListener("ended", () => marcarSonando(false));
+  btn.addEventListener("click", () => audio.paused ? audio.play() : audio.pause());
+  audio.addEventListener("play", () => marcarSonando(true));
+  audio.addEventListener("pause", () => marcarSonando(false));
 
-  function duracionYActual() {
-    if (usarAudioLocal) return [audio.duration, audio.currentTime];
-    if (ytListo) return [ytPlayer.getDuration(), ytPlayer.getCurrentTime()];
-    return [0, 0];
-  }
   function saltarA(seg) {
-    const [dur] = duracionYActual();
-    if (!dur) return;
-    seg = Math.max(0, Math.min(dur - 1, seg));
-    if (usarAudioLocal) audio.currentTime = seg; else { ytPlayer.seekTo(seg, true); if (sonando) ytPlayer.playVideo(); }
+    if (!audio.duration) return;
+    audio.currentTime = Math.max(0, Math.min(audio.duration - 1, seg));
   }
 
   document.getElementById("btn-anterior").addEventListener("click", () => saltarA(0));
-  document.getElementById("btn-siguiente").addEventListener("click", () => saltarA(duracionYActual()[1] + 10));
+  document.getElementById("btn-siguiente").addEventListener("click", () => saltarA(audio.currentTime + 10));
   document.getElementById("btn-repetir").addEventListener("click", e => {
-    repetir = !repetir; audio.loop = repetir; e.currentTarget.classList.toggle("activo", repetir);
-    e.currentTarget.setAttribute("aria-pressed", repetir);
+    audio.loop = !audio.loop;
+    e.currentTarget.classList.toggle("activo", audio.loop);
+    e.currentTarget.setAttribute("aria-pressed", audio.loop);
   });
   document.getElementById("btn-aleatorio").addEventListener("click", e => e.currentTarget.classList.toggle("activo"));
 
   // Barra de progreso (también permite saltar a otra parte de la canción)
-  setInterval(() => {
-    const [dur, act] = duracionYActual();
-    if (repetir && sonando && dur > 0 && dur - act < 0.6) saltarA(0);
-    if (dur > 0) {
-      const pct = (act / dur * 100) + "%";
-      relleno.style.width = pct;
-      perilla.style.left = pct;
-      tActual.textContent = fmt(act);
-      tTotal.textContent = fmt(dur);
-    }
-  }, 250);
+  function actualizarBarra() {
+    const dur = audio.duration;
+    if (!dur) return;
+    const pct = (audio.currentTime / dur * 100) + "%";
+    relleno.style.width = pct;
+    perilla.style.left = pct;
+    tActual.textContent = fmt(audio.currentTime);
+    tTotal.textContent = fmt(dur);
+  }
+  audio.addEventListener("timeupdate", actualizarBarra);
+  audio.addEventListener("loadedmetadata", actualizarBarra);
   document.getElementById("barra").addEventListener("click", e => {
-    const [dur] = duracionYActual();
     const r = e.currentTarget.getBoundingClientRect();
-    saltarA((e.clientX - r.left) / r.width * dur);
+    saltarA((e.clientX - r.left) / r.width * audio.duration);
   });
 </script>
 </body>
