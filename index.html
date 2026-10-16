@@ -4,183 +4,123 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cumple de Juana</title>
-<meta name="description" content="¡Estás invitado/a al cumple de Juana! 25 de octubre, 16:30 hs.">
-<meta property="og:title" content="¡Estás invitado/a al cumple de Juana!">
-<meta property="og:description" content="25 de octubre · 16:30 hs">
-<meta property="og:image" content="img/foto-cumple.webp">
+<meta name="description" content="¡Te invito a mi cumpleaños! Domingo 25/10 - 16:30hs.">
+<meta property="og:title" content="Te invito a mi cumpleaños 23 · Juana">
+<meta property="og:description" content="Domingo 25/10 - 16:30hs · Tinogasta 5386 - Timbre A">
+<meta property="og:image" content="img/foto-playa.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Mr+Dafoe&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --rosa: #f06aa6;
-    --rosa-oscuro: #c2316f;
-    --rosa-claro: #ffe3ef;
-    --crema: #fff8f3;
-    --dorado: #d9a441;
-    --texto: #4a2335;
-    --sombra: 0 14px 40px rgba(194, 49, 111, .18);
+    --rojo: #e2383b;
+    --rojo-oscuro: #c22d30;
+    --rosa: #ffd3d3;
+    --rosa-medio: #f0a9ab;
+    --crema: #fff3ea;
+    --azul: #1d2340;
+    --franja: 34px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: auto; }
   body {
-    font-family: "Fredoka", system-ui, sans-serif;
-    color: var(--texto);
+    font-family: "Montserrat", system-ui, sans-serif;
+    color: var(--rojo-oscuro);
     background: var(--crema);
-    background-image:
-      radial-gradient(circle at 10% 10%, #ffd6e7 0 12%, transparent 13%),
-      radial-gradient(circle at 90% 30%, #ffe9c7 0 9%, transparent 10%),
-      radial-gradient(circle at 15% 70%, #e3f0ff 0 8%, transparent 9%),
-      radial-gradient(circle at 85% 85%, #ffd6e7 0 10%, transparent 11%);
-    background-attachment: fixed;
     overflow-x: hidden;
   }
-  section {
-    min-height: 100vh;
-    min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 16px;
-    text-align: center;
+  .contenedor { width: min(480px, 100%); margin: 0 auto; background: var(--crema); }
+  .script { font-family: "Mr Dafoe", cursive; font-weight: 400; color: var(--rojo-oscuro); line-height: 1; }
+
+  /* Fondo rayado */
+  .rayas {
+    background: repeating-linear-gradient(90deg, var(--rojo) 0 var(--franja), var(--rosa) var(--franja) calc(var(--franja) * 2));
+    padding: 34px 24px;
   }
 
-  /* ---------- Cartel ---------- */
-  .cartel {
-    position: relative;
-    width: min(440px, 100%);
-    background: #fff;
-    border-radius: 28px;
-    padding: 44px 28px 36px;
-    box-shadow: var(--sombra);
-    border: 3px dashed #f7b6d2;
-    overflow: hidden;
-  }
-  .cartel::before, .cartel::after {
-    content: "";
-    position: absolute;
-    width: 160px; height: 160px;
-    border-radius: 50%;
-    background: var(--rosa-claro);
-    z-index: 0;
-  }
-  .cartel::before { top: -70px; left: -60px; }
-  .cartel::after { bottom: -80px; right: -60px; background: #fff0d6; }
-  .cartel > * { position: relative; z-index: 1; }
-  .corona { font-size: 54px; line-height: 1; animation: flotar 3s ease-in-out infinite; }
-  .invitado { text-transform: uppercase; letter-spacing: .22em; font-size: 13px; font-weight: 600; color: var(--rosa-oscuro); margin-top: 14px; }
-  .nombre { font-family: "Great Vibes", cursive; font-size: clamp(64px, 20vw, 96px); line-height: 1.05; color: var(--rosa); margin: 6px 0 2px; text-shadow: 2px 3px 0 #ffd0e4; }
-  .subtitulo { font-size: 20px; font-weight: 500; }
-  .separador { margin: 22px auto; width: 70%; height: 2px; background: linear-gradient(90deg, transparent, var(--dorado), transparent); }
-  .datos { display: grid; gap: 10px; font-size: 17px; }
-  .datos strong { display: block; font-size: 24px; color: var(--rosa-oscuro); font-weight: 700; }
-  .globo { position: absolute; font-size: 34px; z-index: 2; animation: flotar 4s ease-in-out infinite; }
-  .globo.g1 { top: 18px; right: 22px; animation-delay: .6s; }
-  .globo.g2 { bottom: 20px; left: 20px; animation-delay: 1.2s; }
+  /* Tarjeta con borde ondulado (el borde se dibuja con SVG desde JS) */
+  .tarjeta { position: relative; padding: 44px 30px; text-align: center; }
+  .tarjeta > svg.onda { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; z-index: 0; }
+  .tarjeta > *:not(svg) { position: relative; z-index: 1; }
+
+  /* ---------- 1. Cartel ---------- */
+  #inicio .rayas { padding-top: 40px; padding-bottom: 40px; }
+  #inicio .tarjeta { min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 64px 26px 60px; }
+  .te-invito { font-weight: 700; font-size: 18px; }
+  .mi-cumple { font-size: clamp(44px, 13vw, 58px); margin-top: 10px; white-space: nowrap; }
+  .sello { position: relative; width: 170px; height: 170px; margin: 18px 0; display: grid; place-items: center; }
+  .sello svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .sello span { position: relative; font-family: "Mr Dafoe", cursive; font-size: 82px; color: var(--rojo-oscuro); padding-right: 6px; }
+  .nombre { font-size: clamp(54px, 16vw, 70px); }
 
   /* ---------- Reproductor ---------- */
-  .reproductor {
-    margin-top: 28px;
-    width: min(440px, 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 14px;
-  }
-  .btn-play {
-    width: 76px; height: 76px;
-    border-radius: 50%;
-    border: none;
-    background: var(--rosa);
-    color: #fff;
-    box-shadow: 0 8px 24px rgba(240, 106, 166, .45);
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    transition: transform .15s ease, background .2s ease;
-  }
-  .btn-play:hover { transform: scale(1.06); background: var(--rosa-oscuro); }
-  .btn-play:active { transform: scale(.96); }
-  .btn-play svg { width: 32px; height: 32px; fill: currentColor; }
-  .btn-play.pulso { animation: pulso 1.8s ease-out infinite; }
-  .cancion { font-size: 14px; opacity: .8; }
-  .barra {
-    width: 100%;
-    height: 8px;
-    border-radius: 99px;
-    background: #f7d3e3;
-    overflow: hidden;
-    cursor: pointer;
-  }
-  .barra-relleno { height: 100%; width: 0%; background: linear-gradient(90deg, var(--rosa), var(--dorado)); border-radius: 99px; transition: width .25s linear; }
-  .tiempos { width: 100%; display: flex; justify-content: space-between; font-size: 12px; opacity: .7; margin-top: -8px; font-variant-numeric: tabular-nums; }
-  .pista { font-size: 13px; opacity: .65; }
+  .reproductor { background: var(--rosa); padding: 22px 20px 26px; }
+  .titulo-cancion { overflow: hidden; white-space: nowrap; font-weight: 600; font-size: 17px; color: rgba(194, 45, 48, .55); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+  .titulo-cancion span { display: inline-block; padding-left: 100%; animation: marquesina 12s linear infinite; }
+  .controles { display: flex; align-items: center; justify-content: space-between; margin: 22px 4px 26px; }
+  .controles button { border: none; background: none; cursor: pointer; display: grid; place-items: center; color: var(--azul); -webkit-tap-highlight-color: transparent; }
+  .controles svg { fill: currentColor; }
+  .btn-chico { width: 28px; height: 28px; border-radius: 50%; background: var(--rojo) !important; }
+  .btn-chico svg { width: 16px; height: 16px; }
+  .btn-chico.activo { box-shadow: 0 0 0 3px var(--azul); }
+  .btn-medio svg { width: 30px; height: 30px; }
+  .btn-play { width: 102px; height: 102px; border-radius: 50%; background: var(--rojo) !important; transition: transform .15s ease; }
+  .btn-play:active { transform: scale(.95); }
+  .btn-play svg { width: 56px; height: 56px; }
+  .btn-play #icono-play { margin-left: 8px; }
+  .barra { position: relative; height: 18px; cursor: pointer; touch-action: none; }
+  .barra::before { content: ""; position: absolute; left: 0; right: 0; top: 7px; height: 4px; background: var(--azul); border-radius: 4px; }
+  .barra-relleno { position: absolute; left: 0; top: 7px; height: 4px; width: 0; background: var(--rojo); border-radius: 4px; }
+  .perilla { position: absolute; top: 2px; left: 0; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: var(--azul); }
+  .tiempos { display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--azul); opacity: .7; margin-top: 6px; font-variant-numeric: tabular-nums; }
 
-  /* ---------- Fotos ---------- */
-  .polaroid {
-    background: #fff;
-    padding: 14px 14px 52px;
-    border-radius: 6px;
-    box-shadow: var(--sombra);
-    width: min(520px, 100%);
-    transform: rotate(-2deg);
-    position: relative;
+  /* ---------- 2. Detalles ---------- */
+  .banda-rosa { background: var(--rosa); padding: 40px 16px 44px; text-align: center; }
+  .dale-play {
+    font-size: clamp(30px, 9vw, 46px); white-space: nowrap;
+    color: var(--rojo);
+    -webkit-text-stroke: 1.5px var(--azul);
+    paint-order: stroke fill;
+    text-shadow: 2px 2px 0 var(--azul);
   }
-  .polaroid.derecha { transform: rotate(2deg); }
-  .polaroid img { width: 100%; display: block; border-radius: 3px; aspect-ratio: 16 / 10; object-fit: cover; }
-  .polaroid figcaption { position: absolute; bottom: 12px; left: 0; right: 0; font-family: "Great Vibes", cursive; font-size: 28px; color: var(--rosa-oscuro); }
-  .titulo-seccion { font-family: "Great Vibes", cursive; font-size: clamp(44px, 12vw, 64px); color: var(--rosa); margin-bottom: 24px; line-height: 1.1; }
+  #detalles .tarjeta { padding: 60px 30px 54px; font-size: 17px; line-height: 1.5; color: var(--rojo-oscuro); }
+  #detalles b { font-weight: 700; }
+  .foto-marco { display: block; margin: 22px auto 16px; width: min(240px, 80%); border: 7px solid var(--rojo-oscuro); }
+  .foto-marco img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 35%; }
+  .te-espero { font-size: 50px; margin-top: 14px; }
 
-  /* ---------- Cuenta regresiva ---------- */
-  .cuenta-titulo { margin-top: 40px; font-size: 18px; font-weight: 500; }
-  .cuenta {
-    margin-top: 16px;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 10px;
-    width: min(440px, 100%);
-  }
-  .unidad {
-    background: #fff;
-    border-radius: 18px;
-    padding: 16px 4px 12px;
-    box-shadow: 0 6px 18px rgba(194, 49, 111, .12);
-  }
-  .unidad span { display: block; font-size: clamp(28px, 9vw, 42px); font-weight: 700; color: var(--rosa-oscuro); font-variant-numeric: tabular-nums; line-height: 1; }
-  .unidad small { display: block; margin-top: 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .1em; opacity: .7; }
-  .llego { margin-top: 18px; font-size: 22px; font-weight: 600; color: var(--rosa-oscuro); display: none; }
-
-  /* ---------- Confirmar ---------- */
-  .confirmar-texto { max-width: 420px; font-size: 18px; line-height: 1.5; margin: 32px 0 22px; }
+  /* ---------- 3. Cuenta regresiva + confirmar ---------- */
+  #confirmar { padding: 46px 16px 64px; text-align: center; }
+  .faltan { font-family: "Bebas Neue", sans-serif; font-size: 22px; letter-spacing: .02em; color: #7c1f2a; }
+  .cuenta { display: flex; justify-content: center; align-items: flex-start; gap: 6px; margin-top: 6px; font-family: "Bebas Neue", sans-serif; }
+  .unidad { min-width: 64px; }
+  .unidad span { display: block; font-size: clamp(46px, 14vw, 60px); line-height: 1; color: #eab4b4; font-variant-numeric: tabular-nums; }
+  .unidad small { display: block; margin-top: 6px; font-size: 14px; color: #eab4b4; letter-spacing: .03em; }
+  .unidad.segundos span { color: var(--rojo); }
+  .dos-puntos { font-size: clamp(46px, 14vw, 60px); line-height: 1; color: #eab4b4; }
+  .llego { display: none; font-family: "Bebas Neue", sans-serif; font-size: 40px; color: var(--rojo); }
+  .confirmar-titulo { font-size: clamp(34px, 10.5vw, 52px); white-space: nowrap; color: var(--rojo); margin-top: 52px; }
+  .triste { font-size: 20px; color: var(--rojo); margin-top: 4px; }
+  .foto-torta { display: block; width: min(240px, 66%); margin: 22px auto 0; }
+  .foto-torta img { display: block; width: 100%; aspect-ratio: 3 / 4.2; object-fit: cover; object-position: 57% 50%; }
   .btn-confirmar {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    background: #25d366;
-    color: #fff;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 18px;
-    padding: 16px 28px;
-    border-radius: 99px;
-    box-shadow: 0 8px 22px rgba(37, 211, 102, .35);
-    transition: transform .15s ease;
+    display: inline-flex; align-items: center; gap: 10px;
+    margin-top: 30px; padding: 16px 30px;
+    background: var(--rojo); color: #fff; text-decoration: none;
+    font-weight: 700; font-size: 17px; border-radius: 99px;
+    box-shadow: 0 6px 0 var(--azul);
+    transition: transform .15s ease, box-shadow .15s ease;
   }
-  .btn-confirmar:hover { transform: translateY(-2px); }
-  .btn-confirmar svg { width: 24px; height: 24px; fill: currentColor; }
-  .firma { margin-top: 40px; font-family: "Great Vibes", cursive; font-size: 34px; color: var(--rosa); }
+  .btn-confirmar:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--azul); }
+  .btn-confirmar svg { width: 22px; height: 22px; fill: currentColor; }
+  .borde-rayado { height: 6px; background: repeating-linear-gradient(90deg, var(--rojo) 0 var(--franja), var(--rosa) var(--franja) calc(var(--franja) * 2)); }
 
-  /* ---------- Animaciones ---------- */
-  .aparecer { opacity: 0; transform: translateY(30px); transition: opacity .9s ease, transform .9s ease; }
+  /* Aparición al scrollear */
+  .aparecer { opacity: 0; transform: translateY(26px); transition: opacity .9s ease, transform .9s ease; }
   .aparecer.visible { opacity: 1; transform: none; }
-  .polaroid.aparecer.visible { transform: rotate(-2deg); }
-  .polaroid.derecha.aparecer.visible { transform: rotate(2deg); }
-  @keyframes flotar { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-  @keyframes pulso { 0% { box-shadow: 0 0 0 0 rgba(240, 106, 166, .55); } 100% { box-shadow: 0 0 0 22px rgba(240, 106, 166, 0); } }
+  @keyframes marquesina { from { transform: translateX(0); } to { transform: translateX(-100%); } }
   @media (prefers-reduced-motion: reduce) {
-    .corona, .globo, .btn-play.pulso { animation: none; }
-    .aparecer { transition: none; opacity: 1; transform: none; }
+    .titulo-cancion span { animation: none; padding-left: 0; }
+    .aparecer { opacity: 1; transform: none; transition: none; }
   }
 
   /* Reproductor de YouTube oculto (no se usa display:none para que el navegador lo deje sonar) */
@@ -188,81 +128,96 @@
 </style>
 </head>
 <body>
+<main class="contenedor">
 
-<!-- 1. Cartel de invitación + reproductor -->
-<section id="inicio">
-  <div class="cartel">
-    <span class="globo g1">🎈</span>
-    <span class="globo g2">🎈</span>
-    <div class="corona">👑</div>
-    <p class="invitado">Estás invitado/a al cumple de</p>
-    <h1 class="nombre">Juana</h1>
-    <p class="subtitulo">¡Vení a festejar conmigo!</p>
-    <div class="separador"></div>
-    <div class="datos">
-      <p><strong id="dato-fecha">25 de octubre</strong></p>
-      <p><strong>16:30 hs</strong></p>
-      <p id="dato-lugar"></p>
+  <!-- 1. Cartel de invitación + reproductor -->
+  <section id="inicio">
+    <div class="rayas">
+      <div class="tarjeta">
+        <p class="te-invito">Te invito a</p>
+        <h1 class="script mi-cumple">Mi cumpleaños</h1>
+        <div class="sello">
+          <svg viewBox="0 0 200 200" id="estrella"></svg>
+          <span>23</span>
+        </div>
+        <p class="script nombre">Juana</p>
+      </div>
     </div>
-  </div>
 
-  <div class="reproductor">
-    <button class="btn-play pulso" id="btn-play" aria-label="Reproducir">
-      <svg id="icono-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-      <svg id="icono-pausa" viewBox="0 0 24 24" style="display:none"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-    </button>
-    <p class="cancion">♪ Night Changes — One Direction</p>
-    <div class="barra" id="barra"><div class="barra-relleno" id="barra-relleno"></div></div>
-    <div class="tiempos"><span id="t-actual">0:00</span><span id="t-total">0:00</span></div>
-    <p class="pista">Tocá play y dejate llevar ✨</p>
-  </div>
-</section>
+    <div class="reproductor">
+      <div class="titulo-cancion"><span>One Direction - Night Changes &nbsp;·&nbsp; One Direction - Night Changes</span></div>
+      <div class="controles">
+        <button class="btn-chico" id="btn-aleatorio" aria-label="Aleatorio">
+          <svg viewBox="0 0 24 24"><path d="M10.6 9.2 5.4 4 4 5.4l5.2 5.2 1.4-1.4zM14.5 4l2 2L4 18.6 5.4 20 18 7.5l2 2V4h-5.5zm.3 9.4-1.4 1.4 3.1 3.1-2 2.1H20v-5.5l-2 2-3.2-3.1z"/></svg>
+        </button>
+        <button class="btn-medio" id="btn-anterior" aria-label="Volver al principio">
+          <svg viewBox="0 0 24 24"><path d="M6 5h2.5v14H6zM9.5 12 19 5v14z"/></svg>
+        </button>
+        <button class="btn-play" id="btn-play" aria-label="Reproducir">
+          <svg id="icono-play" viewBox="0 0 24 24"><path d="M5 3.5v17L20 12z"/></svg>
+          <svg id="icono-pausa" viewBox="0 0 24 24" style="display:none"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z"/></svg>
+        </button>
+        <button class="btn-medio" id="btn-siguiente" aria-label="Adelantar 10 segundos">
+          <svg viewBox="0 0 24 24"><path d="M15.5 5H18v14h-2.5zM14.5 12 5 19V5z"/></svg>
+        </button>
+        <button class="btn-chico" id="btn-repetir" aria-label="Repetir">
+          <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+        </button>
+      </div>
+      <div class="barra" id="barra"><div class="barra-relleno" id="barra-relleno"></div><div class="perilla" id="perilla"></div></div>
+      <div class="tiempos"><span id="t-actual">0:00</span><span id="t-total">0:00</span></div>
+    </div>
+  </section>
 
-<!-- 2. Foto + cuenta regresiva -->
-<section id="cuenta">
-  <h2 class="titulo-seccion aparecer">Ya falta poquito…</h2>
-  <figure class="polaroid aparecer">
-    <img src="img/foto-cumple.webp" alt="Juana con su corona frente a la torta de cumpleaños">
-    <figcaption>mi cumple</figcaption>
-  </figure>
-  <p class="cuenta-titulo aparecer">Faltan</p>
-  <div class="cuenta aparecer" id="reloj">
-    <div class="unidad"><span id="dias">0</span><small>días</small></div>
-    <div class="unidad"><span id="horas">00</span><small>horas</small></div>
-    <div class="unidad"><span id="minutos">00</span><small>min</small></div>
-    <div class="unidad"><span id="segundos">00</span><small>seg</small></div>
-  </div>
-  <p class="llego" id="llego">¡Llegó el gran día! 🎉</p>
-</section>
+  <!-- 2. Detalles del cumple -->
+  <section id="detalles">
+    <div class="banda-rosa"><h2 class="script dale-play">Dale play a la canción!</h2></div>
+    <div class="rayas">
+      <div class="tarjeta">
+        <p class="aparecer">Veni a tomar unos <b>mates</b>, comer cosas <b>cero fitt</b> y a pasar una <b>linda tarde</b>.<br>(si el clima nos deja)<br>((porfa recen para que nos deje))</p>
+        <figure class="foto-marco aparecer"><img src="img/foto-playa.webp" alt="Juana de chiquita en la playa con un mate"></figure>
+        <p class="aparecer">Domingo <b>25/10 - 16:30</b>hs<br>Tinogasta <b>5386</b>-Timbre <b>A</b></p>
+        <p class="script te-espero aparecer">Te espero!</p>
+      </div>
+    </div>
+  </section>
 
-<!-- 3. Confirmar asistencia -->
-<section id="confirmar">
-  <h2 class="titulo-seccion aparecer">¿Venís?</h2>
-  <figure class="polaroid derecha aparecer">
-    <img src="img/foto-playa.webp" alt="Juana en la playa con un mate">
-    <figcaption>te espero</figcaption>
-  </figure>
-  <p class="confirmar-texto aparecer">Me encantaría que estés conmigo en este día tan especial. Por favor, confirmá tu asistencia 💖</p>
-  <a class="btn-confirmar aparecer" id="btn-confirmar" href="#" target="_blank" rel="noopener">
-    <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.8 14.03c-.24.68-1.42 1.3-1.95 1.35-.5.05-.97.23-3.27-.68-2.77-1.09-4.53-3.93-4.67-4.11-.13-.18-1.1-1.47-1.1-2.81s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .39-.06.61.47.24.56.79 1.92.86 2.06.07.14.11.3.02.48-.09.18-.14.3-.27.46-.14.16-.29.36-.41.48-.14.14-.28.29-.12.56.16.27.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.14.43.11.59-.07.16-.18.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.59.75 1.86.89.27.14.45.2.52.32.07.11.07.66-.17 1.34z"/></svg>
-    Confirmar asistencia
-  </a>
-  <p class="firma aparecer">¡Te espero! Juana</p>
-</section>
+  <!-- 3. Cuenta regresiva + confirmar asistencia -->
+  <section id="confirmar">
+    <p class="faltan aparecer" id="faltan">Faltan...</p>
+    <div class="cuenta aparecer" id="reloj">
+      <div class="unidad"><span id="dias">0</span><small>DÍAS</small></div>
+      <span class="dos-puntos">:</span>
+      <div class="unidad"><span id="horas">00</span><small>HORAS</small></div>
+      <span class="dos-puntos">:</span>
+      <div class="unidad"><span id="minutos">00</span><small>MINUTOS</small></div>
+      <span class="dos-puntos">:</span>
+      <div class="unidad segundos"><span id="segundos">00</span><small>SEGUNDOS</small></div>
+    </div>
+    <p class="llego" id="llego">¡Llegó el día! 🎉</p>
+
+    <h2 class="script confirmar-titulo aparecer">Confirmar asistencia!!</h2>
+    <p class="triste aparecer">Porfa, sino me voy a poner triste...</p>
+    <figure class="foto-torta aparecer"><img src="img/foto-cumple.webp" alt="Juana de chiquita con corona frente a su torta de cumpleaños"></figure>
+    <a class="btn-confirmar aparecer" id="btn-confirmar" href="#" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2zm5.8 14.03c-.24.68-1.42 1.3-1.95 1.35-.5.05-.97.23-3.27-.68-2.77-1.09-4.53-3.93-4.67-4.11-.13-.18-1.1-1.47-1.1-2.81s.7-2 .95-2.27c.25-.27.54-.34.72-.34h.52c.17 0 .39-.06.61.47.24.56.79 1.92.86 2.06.07.14.11.3.02.48-.09.18-.14.3-.27.46-.14.16-.29.36-.41.48-.14.14-.28.29-.12.56.16.27.71 1.17 1.52 1.9 1.05.93 1.93 1.22 2.2 1.36.27.14.43.11.59-.07.16-.18.68-.79.86-1.06.18-.27.36-.23.61-.14.25.09 1.59.75 1.86.89.27.14.45.2.52.32.07.11.07.66-.17 1.34z"/></svg>
+      Confirmar por WhatsApp
+    </a>
+  </section>
+  <div class="borde-rayado"></div>
+</main>
 
 <div id="yt"></div>
 
 <script>
   /* ===================== CONFIGURACIÓN ===================== */
   const CONFIG = {
-    // Fecha y hora del cumple (hora local de Argentina, -03:00)
+    // Fecha y hora del cumple (hora de Argentina, -03:00)
     fecha: "2026-10-25T16:30:00-03:00",
-    // Dirección del salón (dejar vacío "" para no mostrarla)
-    lugar: "",
     // Número de WhatsApp para confirmar: código de país + área + número, sin "+" ni espacios
     // Ej: "5491112345678"
     whatsapp: "",
-    mensajeWhatsapp: "¡Hola! Confirmo mi asistencia al cumple de Juana 🎉",
+    mensajeWhatsapp: "¡Hola Juana! Confirmo que voy a tu cumple 🎉",
     // Video de YouTube de "Night Changes" (One Direction)
     youtubeId: "syFZfO_wfMQ",
     // Si querés usar un mp3 propio en vez de YouTube, subilo como audio/night-changes.mp3
@@ -272,26 +227,73 @@
   };
   /* ========================================================= */
 
-  // ---------- Datos del cartel ----------
-  const fechaEvento = new Date(CONFIG.fecha);
-  const dias = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
-  document.getElementById("dato-fecha").textContent =
-    dias[fechaEvento.getDay()].replace(/^./, c => c.toUpperCase()) + " 25 de octubre";
-  if (CONFIG.lugar) document.getElementById("dato-lugar").textContent = "📍 " + CONFIG.lugar;
+  const NS = "http://www.w3.org/2000/svg";
 
-  const btnConfirmar = document.getElementById("btn-confirmar");
+  // ---------- Borde ondulado de las tarjetas ----------
+  function dibujarOnda(tarjeta) {
+    let svg = tarjeta.querySelector("svg.onda");
+    if (!svg) {
+      svg = document.createElementNS(NS, "svg");
+      svg.classList.add("onda");
+      svg.appendChild(document.createElementNS(NS, "path"));
+      tarjeta.prepend(svg);
+    }
+    const w = tarjeta.offsetWidth, h = tarjeta.offsetHeight;
+    const amp = 10, largoOnda = 64, m = amp + 3; // margen para que la onda no se corte
+    svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    const lado = (x1, y1, x2, y2, nx, ny) => {
+      const largo = Math.hypot(x2 - x1, y2 - y1);
+      const n = Math.max(2, Math.round(largo / largoOnda)), pasos = n * 16;
+      const pts = [];
+      for (let i = 1; i <= pasos; i++) {
+        const t = i / pasos, s = Math.sin(t * n * 2 * Math.PI) * amp;
+        pts.push(`${(x1 + (x2 - x1) * t + nx * s).toFixed(1)},${(y1 + (y2 - y1) * t + ny * s).toFixed(1)}`);
+      }
+      return pts.join(" L");
+    };
+    const d = `M${m},${m} L` + lado(m, m, w - m, m, 0, -1) + " L" + lado(w - m, m, w - m, h - m, 1, 0) +
+              " L" + lado(w - m, h - m, m, h - m, 0, 1) + " L" + lado(m, h - m, m, m, -1, 0) + " Z";
+    const path = svg.querySelector("path");
+    path.setAttribute("d", d);
+    path.setAttribute("fill", "var(--crema)");
+    path.setAttribute("stroke", "var(--rojo-oscuro)");
+    path.setAttribute("stroke-width", "5");
+    path.setAttribute("stroke-linejoin", "round");
+  }
+  const tarjetas = document.querySelectorAll(".tarjeta");
+  const ro = new ResizeObserver(() => tarjetas.forEach(dibujarOnda));
+  tarjetas.forEach(t => ro.observe(t));
+
+  // ---------- Sello (estrella dentada) del "23" ----------
+  (() => {
+    const puntas = 30, rExt = 94, rInt = 84, pts = [];
+    for (let i = 0; i < puntas * 2; i++) {
+      const r = i % 2 ? rInt : rExt, a = Math.PI * i / puntas;
+      pts.push(`${(100 + r * Math.cos(a)).toFixed(1)},${(100 + r * Math.sin(a)).toFixed(1)}`);
+    }
+    const poly = document.createElementNS(NS, "polygon");
+    poly.setAttribute("points", pts.join(" "));
+    poly.setAttribute("fill", "var(--rosa)");
+    poly.setAttribute("stroke", "var(--rojo-oscuro)");
+    poly.setAttribute("stroke-width", "4");
+    poly.setAttribute("stroke-linejoin", "round");
+    document.getElementById("estrella").appendChild(poly);
+  })();
+
+  // ---------- Botón de WhatsApp ----------
   const textoWa = encodeURIComponent(CONFIG.mensajeWhatsapp);
-  btnConfirmar.href = CONFIG.whatsapp
+  document.getElementById("btn-confirmar").href = CONFIG.whatsapp
     ? `https://wa.me/${CONFIG.whatsapp}?text=${textoWa}`
     : `https://wa.me/?text=${textoWa}`;
 
   // ---------- Cuenta regresiva ----------
+  const fechaEvento = new Date(CONFIG.fecha);
   const pad = n => String(n).padStart(2, "0");
   function actualizarCuenta() {
     const diff = fechaEvento - Date.now();
     if (diff <= 0) {
       document.getElementById("reloj").style.display = "none";
-      document.querySelector(".cuenta-titulo").style.display = "none";
+      document.getElementById("faltan").style.display = "none";
       document.getElementById("llego").style.display = "block";
       return;
     }
@@ -340,11 +342,12 @@
   const iconoPlay = document.getElementById("icono-play");
   const iconoPausa = document.getElementById("icono-pausa");
   const relleno = document.getElementById("barra-relleno");
+  const perilla = document.getElementById("perilla");
   const tActual = document.getElementById("t-actual");
   const tTotal = document.getElementById("t-total");
   const fmt = s => isFinite(s) ? `${Math.floor(s / 60)}:${pad(Math.floor(s % 60))}` : "0:00";
 
-  let ytPlayer = null, ytListo = false, usarAudioLocal = false, sonando = false;
+  let ytPlayer = null, ytListo = false, usarAudioLocal = false, sonando = false, repetir = false;
   const audio = new Audio();
   audio.preload = "none";
 
@@ -361,7 +364,9 @@
         onReady: () => { ytListo = true; tTotal.textContent = fmt(ytPlayer.getDuration()); },
         onStateChange: e => {
           if (e.data === YT.PlayerState.PLAYING) marcarSonando(true);
-          if (e.data === YT.PlayerState.ENDED) marcarSonando(false);
+          if (e.data === YT.PlayerState.ENDED) {
+            if (repetir) { ytPlayer.seekTo(0, true); ytPlayer.playVideo(); } else marcarSonando(false);
+          }
         }
       }
     });
@@ -375,7 +380,6 @@
     iconoPlay.style.display = si ? "none" : "";
     iconoPausa.style.display = si ? "" : "none";
     btn.setAttribute("aria-label", si ? "Pausar" : "Reproducir");
-    btn.classList.remove("pulso");
     si ? iniciarScroll() : detenerScroll();
   }
 
@@ -390,26 +394,40 @@
   });
   audio.addEventListener("ended", () => marcarSonando(false));
 
-  // Barra de progreso (también permite saltar a otra parte de la canción)
   function duracionYActual() {
     if (usarAudioLocal) return [audio.duration, audio.currentTime];
     if (ytListo) return [ytPlayer.getDuration(), ytPlayer.getCurrentTime()];
     return [0, 0];
   }
+  function saltarA(seg) {
+    const [dur] = duracionYActual();
+    if (!dur) return;
+    seg = Math.max(0, Math.min(dur - 1, seg));
+    if (usarAudioLocal) audio.currentTime = seg; else ytPlayer.seekTo(seg, true);
+  }
+
+  document.getElementById("btn-anterior").addEventListener("click", () => saltarA(0));
+  document.getElementById("btn-siguiente").addEventListener("click", () => saltarA(duracionYActual()[1] + 10));
+  document.getElementById("btn-repetir").addEventListener("click", e => {
+    repetir = !repetir; audio.loop = repetir; e.currentTarget.classList.toggle("activo", repetir);
+  });
+  document.getElementById("btn-aleatorio").addEventListener("click", e => e.currentTarget.classList.toggle("activo"));
+
+  // Barra de progreso (también permite saltar a otra parte de la canción)
   setInterval(() => {
     const [dur, act] = duracionYActual();
     if (dur > 0) {
-      relleno.style.width = (act / dur * 100) + "%";
+      const pct = (act / dur * 100) + "%";
+      relleno.style.width = pct;
+      perilla.style.left = pct;
       tActual.textContent = fmt(act);
       tTotal.textContent = fmt(dur);
     }
   }, 250);
   document.getElementById("barra").addEventListener("click", e => {
     const [dur] = duracionYActual();
-    if (!dur) return;
     const r = e.currentTarget.getBoundingClientRect();
-    const destino = (e.clientX - r.left) / r.width * dur;
-    if (usarAudioLocal) audio.currentTime = destino; else ytPlayer.seekTo(destino, true);
+    saltarA((e.clientX - r.left) / r.width * dur);
   });
 </script>
 </body>
