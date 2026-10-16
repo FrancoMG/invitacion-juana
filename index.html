@@ -61,7 +61,7 @@
   .controles svg { fill: currentColor; }
   .btn-chico { width: 28px; height: 28px; border-radius: 50%; background: var(--rojo) !important; }
   .btn-chico svg { width: 16px; height: 16px; }
-  .btn-chico.activo { box-shadow: 0 0 0 3px var(--azul); }
+  .btn-chico.activo { background: var(--azul) !important; color: #fff; box-shadow: 0 0 0 3px var(--rojo); }
   .btn-medio svg { width: 30px; height: 30px; }
   .btn-play { width: 102px; height: 102px; border-radius: 50%; background: var(--rojo) !important; transition: transform .15s ease; }
   .btn-play:active { transform: scale(.95); }
@@ -89,14 +89,14 @@
   .te-espero { font-size: 50px; margin-top: 14px; }
 
   /* ---------- 3. Cuenta regresiva + confirmar ---------- */
-  #confirmar { padding: 46px 16px 64px; text-align: center; }
+  #confirmar { padding: 46px 16px 64px; text-align: center; background: var(--rosa); }
   .faltan { font-family: "Bebas Neue", sans-serif; font-size: 22px; letter-spacing: .02em; color: #7c1f2a; }
   .cuenta { display: flex; justify-content: center; align-items: flex-start; gap: 6px; margin-top: 6px; font-family: "Bebas Neue", sans-serif; }
   .unidad { min-width: 64px; }
-  .unidad span { display: block; font-size: clamp(46px, 14vw, 60px); line-height: 1; color: #eab4b4; font-variant-numeric: tabular-nums; }
-  .unidad small { display: block; margin-top: 6px; font-size: 14px; color: #eab4b4; letter-spacing: .03em; }
+  .unidad span { display: block; font-size: clamp(46px, 14vw, 60px); line-height: 1; color: #d98e91; font-variant-numeric: tabular-nums; }
+  .unidad small { display: block; margin-top: 6px; font-size: 14px; color: #d98e91; letter-spacing: .03em; }
   .unidad.segundos span { color: var(--rojo); }
-  .dos-puntos { font-size: clamp(46px, 14vw, 60px); line-height: 1; color: #eab4b4; }
+  .dos-puntos { font-size: clamp(46px, 14vw, 60px); line-height: 1; color: #d98e91; }
   .llego { display: none; font-family: "Bebas Neue", sans-serif; font-size: 40px; color: var(--rojo); }
   .confirmar-titulo { font-size: clamp(34px, 10.5vw, 52px); white-space: nowrap; color: var(--rojo); margin-top: 52px; }
   .triste { font-size: 20px; color: var(--rojo); margin-top: 4px; }
@@ -150,7 +150,7 @@
         <button class="btn-medio" id="btn-siguiente" aria-label="Adelantar 10 segundos">
           <svg viewBox="0 0 24 24"><path d="M15.5 5H18v14h-2.5zM14.5 12 5 19V5z"/></svg>
         </button>
-        <button class="btn-chico" id="btn-repetir" aria-label="Repetir">
+        <button class="btn-chico" id="btn-repetir" aria-label="Repetir" aria-pressed="false">
           <svg viewBox="0 0 24 24"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
         </button>
       </div>
@@ -205,7 +205,7 @@
     // Si querés usar un mp3 propio en vez de YouTube, subilo como audio/night-changes.mp3
     audioLocal: "audio/night-changes.mp3",
     // Velocidad del scroll automático (píxeles por segundo)
-    velocidadScroll: 55
+    velocidadScroll: 80
   };
   /* ========================================================= */
 
@@ -379,19 +379,21 @@
     const [dur] = duracionYActual();
     if (!dur) return;
     seg = Math.max(0, Math.min(dur - 1, seg));
-    if (usarAudioLocal) audio.currentTime = seg; else ytPlayer.seekTo(seg, true);
+    if (usarAudioLocal) audio.currentTime = seg; else { ytPlayer.seekTo(seg, true); if (sonando) ytPlayer.playVideo(); }
   }
 
   document.getElementById("btn-anterior").addEventListener("click", () => saltarA(0));
   document.getElementById("btn-siguiente").addEventListener("click", () => saltarA(duracionYActual()[1] + 10));
   document.getElementById("btn-repetir").addEventListener("click", e => {
     repetir = !repetir; audio.loop = repetir; e.currentTarget.classList.toggle("activo", repetir);
+    e.currentTarget.setAttribute("aria-pressed", repetir);
   });
   document.getElementById("btn-aleatorio").addEventListener("click", e => e.currentTarget.classList.toggle("activo"));
 
   // Barra de progreso (también permite saltar a otra parte de la canción)
   setInterval(() => {
     const [dur, act] = duracionYActual();
+    if (repetir && sonando && dur > 0 && dur - act < 0.6) saltarA(0);
     if (dur > 0) {
       const pct = (act / dur * 100) + "%";
       relleno.style.width = pct;
