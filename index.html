@@ -114,7 +114,7 @@
   }
 
   /* Reproductor de YouTube oculto (no se usa display:none para que el navegador lo deje sonar) */
-  #yt { position: fixed; width: 1px; height: 1px; left: -10px; bottom: 0; opacity: 0; pointer-events: none; }
+  #yt { position: fixed; width: 1px; height: 1px; left: 0; bottom: 0; opacity: 0; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -210,6 +210,18 @@
   /* ========================================================= */
 
   const NS = "http://www.w3.org/2000/svg";
+
+  // ---------- Ocupar todo el ancho en celulares ----------
+  // Si el navegador del celular muestra la página como "versión de escritorio" (más ancha que la pantalla),
+  // se agranda la invitación para que llene todo el ancho igual.
+  const contenedor = document.querySelector(".contenedor");
+  function ajustarAncho() {
+    const ancho = document.documentElement.clientWidth;
+    const esCelular = Math.min(screen.width, screen.height) <= 820;
+    contenedor.style.zoom = esCelular && ancho > 480 ? ancho / 480 : "";
+  }
+  ajustarAncho();
+  window.addEventListener("resize", ajustarAncho);
 
   // ---------- Borde ondulado de las tarjetas ----------
   function dibujarOnda(tarjeta) {
